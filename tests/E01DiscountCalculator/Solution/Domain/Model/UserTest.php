@@ -10,14 +10,14 @@ class UserTest extends TestCase
 {
     public function testItIsBuildingPremiumUser(): void
     {
-        $premium = User::fromData(['premium' => true]);
+        $premium = User::fromData(['is_premium' => true]);
         $this->assertInstanceOf(User::class, $premium);
         $this->assertTrue($premium->isPremium());
     }
 
     public function testItIsBuildingNonPremiumUser(): void
     {
-        $regular = User::fromData(['premium' => false]);
+        $regular = User::fromData(['is_premium' => false]);
         $this->assertInstanceOf(User::class, $regular);
         $this->assertFalse($regular->isPremium());
     }

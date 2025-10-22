@@ -19,9 +19,9 @@ class User
     public static function fromData(array $userData): self
     {
         return new self(
-            isset($userData['premium'])
-            && is_bool($userData['premium'])
-            && $userData['premium']
+            isset($userData['is_premium'])
+            && is_bool($userData['is_premium'])
+            && $userData['is_premium']
         );
     }
 }

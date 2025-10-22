@@ -37,10 +37,10 @@ class OrderTest extends TestCase
     public function testItIsBuildingPremiumUser(): void
     {
         $orderData = [
-                'user' => [
-                    'premium' => true,
-                ],
-            ];
+            'user' => [
+                'is_premium' => true,
+            ],
+        ];
 
         $actual = Order::fromData($orderData);
 
@@ -63,7 +63,7 @@ class OrderTest extends TestCase
     {
         $orderData = [
             'user' => [
-                'premium' => false,
+                'is_premium' => false,
             ],
         ];
 
@@ -105,7 +105,7 @@ class OrderTest extends TestCase
     public function testItIsBuildingFullOrder(): void
     {
         $orderData = [
-            'user'           => ['premium' => true],
+            'user'           => ['is_premium' => true],
             'coupon'         => 'WELCOME',
             'total'          => 150.0,
             'shipping'       => 20.0,
