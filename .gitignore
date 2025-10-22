@@ -1,0 +1,30 @@
+# Composer vendor folder
+/vendor/
+
+/composer.lock
+
+# PHP CS Fixer cache
+/.php-cs-fixer.cache
+
+# PHPUnit cache and coverage reports
+/build/
+/coverage/
+/phpunit.xml
+/phpunit.xml.dist
+
+# IDE / Editor files
+/.idea/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
