@@ -7,7 +7,6 @@ namespace Tests\E01DiscountCalculator;
 use App\E01DiscountCalculator\DiscountCalculator;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
-use Tests\E01DiscountCalculator\DiscountCalculatorDataProvider;
 
 class DiscountCalculatorTest extends TestCase
 {
