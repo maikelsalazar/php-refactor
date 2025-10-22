@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\E01DiscountCalculator;
+
 use App\E01DiscountCalculator\DiscountCalculator;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
