@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\E01DiscountCalculator\Solution;
 
-use App\E01DiscountCalculator\DiscountCalculator;
+use App\E01DiscountCalculator\Solution\DiscountCalculator;
+use App\E01DiscountCalculator\Solution\Domain\Discount\DiscountService;
+use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\DiscountRulesCatalog;
+use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\GuestUserDiscountRule;
+use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\PremiumUserDiscountRule;
+use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\RegularUserDiscountRule;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 use Tests\E01DiscountCalculator\DiscountCalculatorDataProvider;
@@ -15,7 +20,17 @@ class DiscountCalculatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->calculator = new DiscountCalculator();
+        $discountService = new DiscountService(
+            new DiscountRulesCatalog(
+                [
+                    new GuestUserDiscountRule(),
+                    new RegularUserDiscountRule(),
+                    new PremiumUserDiscountRule(),
+                ]
+            )
+        );
+
+        $this->calculator = new DiscountCalculator($discountService);
     }
 
     #[DataProviderExternal(DiscountCalculatorDataProvider::class, 'premiumUserOver1000')]
