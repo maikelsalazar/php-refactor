@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\E01DiscountCalculator\Solution\Domain\Discount\Rules;
 
+use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\DiscountRule;
 use App\E01DiscountCalculator\Solution\Domain\Discount\Rules\PremiumUserDiscountRule;
 use App\E01DiscountCalculator\Solution\Domain\Model\Order;
 use App\E01DiscountCalculator\Solution\Domain\Model\User;
@@ -11,41 +12,48 @@ use PHPUnit\Framework\TestCase;
 
 class PremiumUserDiscountRuleTest extends TestCase
 {
-    public function testItIsCalculatingDiscountOver1000(): void
+    private DiscountRule $discountRule;
+
+    protected function setUp(): void
+    {
+        $this->discountRule = new PremiumUserDiscountRule();
+    }
+
+    public function testCalculatesDiscountOver1000ForPremiumUser(): void
     {
         $order = new Order(1100, 10, 0, null, new User(true));
 
-        $premiumRule = new PremiumUserDiscountRule();
-
-        $this->assertTrue($premiumRule->supports($order));
-        $this->assertEquals(1100 * 0.2, $premiumRule->calculate($order));
+        $this->assertTrue($this->discountRule->supports($order));
+        $this->assertEquals(1100 * 0.2, $this->discountRule->calculate($order));
     }
 
-    public function testItIsCalculatingDiscountUnder1000(): void
+    public function testCalculatesDiscountExactly1000ForPremiumUser(): void
+    {
+        $order = new Order(1000, 10, 0, null, new User(true));
+
+        $this->assertTrue($this->discountRule->supports($order));
+        $this->assertEquals(1000 * 0.1, $this->discountRule->calculate($order));
+    }
+
+    public function testCalculatesDiscountUnder1000ForPremiumUser(): void
     {
         $order = new Order(500, 10, 0, null, new User(true));
 
-        $premiumRule = new PremiumUserDiscountRule();
-
-        $this->assertTrue($premiumRule->supports($order));
-        $this->assertEquals(500 * 0.1, $premiumRule->calculate($order));
+        $this->assertTrue($this->discountRule->supports($order));
+        $this->assertEquals(500 * 0.1, $this->discountRule->calculate($order));
     }
 
-    public function testItIsNotSupportingNonPremiumUser(): void
+    public function testDoesNotSupportNonPremiumUser(): void
     {
         $order = new Order(500, 10, 0, null, new User(false));
 
-        $premiumRule = new PremiumUserDiscountRule();
-
-        $this->assertFalse($premiumRule->supports($order));
+        $this->assertFalse($this->discountRule->supports($order));
     }
 
-    public function testItIsNotSupportingGuestUser(): void
+    public function testDoesNotSupportGuestUser(): void
     {
         $order = new Order(500, 10, 0, null, null);
 
-        $premiumRule = new PremiumUserDiscountRule();
-
-        $this->assertFalse($premiumRule->supports($order));
+        $this->assertFalse($this->discountRule->supports($order));
     }
 }

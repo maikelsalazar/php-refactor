@@ -8,22 +8,25 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-    public function testItIsBuildingPremiumUser(): void
+    public function testBuildsPremiumUser(): void
     {
         $premium = User::fromData(['is_premium' => true]);
         $this->assertInstanceOf(User::class, $premium);
         $this->assertTrue($premium->isPremium());
     }
 
-    public function testItIsBuildingNonPremiumUser(): void
+    public function testBuildsNonPremiumUser(): void
     {
         $regular = User::fromData(['is_premium' => false]);
         $this->assertInstanceOf(User::class, $regular);
         $this->assertFalse($regular->isPremium());
     }
 
-    public function testItIsBuildingWithEmptyData(): void
+    public function testBuildsUserWithEmptyData(): void
     {
-        $this->assertInstanceOf(User::class, User::fromData([]));
+        $user = User::fromData([]);
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertFalse($user->isPremium(), 'Default user is non-premium');
     }
 }

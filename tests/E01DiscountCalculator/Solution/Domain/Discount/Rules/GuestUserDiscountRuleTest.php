@@ -19,7 +19,7 @@ class GuestUserDiscountRuleTest extends TestCase
         $this->discountRule = new GuestUserDiscountRule();
     }
 
-    public function testItIsCalculatingGuesDiscount(): void
+    public function testCalculatesDiscountForGuest(): void
     {
         $order = new Order(100, 10, 15, null, null);
 
@@ -27,7 +27,7 @@ class GuestUserDiscountRuleTest extends TestCase
         $this->assertEquals(15, $this->discountRule->calculate($order));
     }
 
-    public function testItIsHavingNoDiscountWhenGuesDiscountIsNotProvided(): void
+    public function testCalculatesNoDiscountForGuest(): void
     {
         $order = new Order(100, 10, 0, null, null);
 
@@ -35,7 +35,7 @@ class GuestUserDiscountRuleTest extends TestCase
         $this->assertEquals(0, $this->discountRule->calculate($order));
     }
 
-    public function testItIsNotSupportingGuesDiscountWhenThereIsAnUser(): void
+    public function testDoesNotSupportOrdersWithUser(): void
     {
         $order = new Order(100, 10, 15, null, new User(false));
 

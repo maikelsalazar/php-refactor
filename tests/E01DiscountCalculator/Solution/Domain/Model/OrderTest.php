@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase
 {
-    public function testItIsBuildingDefault(): void
+    public function testBuildsOrderWithDefaults(): void
     {
         $actual = Order::fromData([]);
         $this->assertInstanceOf(Order::class, $actual);
@@ -26,7 +26,7 @@ class OrderTest extends TestCase
         $this->assertEquals(0.0, $actual->getTotal(), 'Total defaults 0');
     }
 
-    public function testItIsBuildingGuestOrderWithDiscount(): void
+    public function testBuildsGuestOrderWithDiscount(): void
     {
         $actual = Order::fromData(['guest_discount' => 50.0]);
 
@@ -34,7 +34,7 @@ class OrderTest extends TestCase
         $this->assertEquals(50.0, $actual->getGuestDiscount());
     }
 
-    public function testItIsBuildingPremiumUser(): void
+    public function testBuildsPremiumUserOrder(): void
     {
         $orderData = [
             'user' => [
@@ -59,7 +59,7 @@ class OrderTest extends TestCase
 
     }
 
-    public function testItIsBuildingNonPremiumUser(): void
+    public function testBuildsNonPremiumUserOrder(): void
     {
         $orderData = [
             'user' => [
@@ -75,7 +75,7 @@ class OrderTest extends TestCase
 
     }
 
-    public function testItIsBuildingOrderWithCoupon(): void
+    public function testBuildsOrderWithCoupon(): void
     {
         $orderData = [
             'coupon'   => 'WELCOME',
@@ -87,7 +87,7 @@ class OrderTest extends TestCase
         $this->assertEquals('WELCOME', $actual->getCoupon());
     }
 
-    public function testItIsBuildingOrderWithTotalAndShipping(): void
+    public function testBuildsOrderWithTotalAndShipping(): void
     {
         $orderData = [
             'total'      => 50.0,
@@ -102,7 +102,7 @@ class OrderTest extends TestCase
 
     }
 
-    public function testItIsBuildingFullOrder(): void
+    public function testBuildsFullOrder(): void
     {
         $orderData = [
             'user'           => ['is_premium' => true],

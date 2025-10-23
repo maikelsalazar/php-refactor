@@ -19,16 +19,23 @@ class RegularUserDiscountRuleTest extends TestCase
         $this->discountRule = new RegularUserDiscountRule();
     }
 
-    public function testItIsCalculatingDiscountOver500(): void
+    public function testCalculatesDiscountOver500ForRegularUser(): void
     {
         $order = new Order(1100, 10, 0, null, new User(false));
-
 
         $this->assertTrue($this->discountRule->supports($order));
         $this->assertEquals(1100 * 0.05, $this->discountRule->calculate($order));
     }
 
-    public function testItIsCalculatingDiscountUnder500AndUsingWelcomeCoupon(): void
+    public function testCalculatesDiscountExactly500ForRegularUser(): void
+    {
+        $order = new Order(500, 10, 0, null, new User(false));
+
+        $this->assertTrue($this->discountRule->supports($order));
+        $this->assertEquals(0, $this->discountRule->calculate($order));
+    }
+
+    public function testCalculatesDiscountUnder500WithWelcomeCoupon(): void
     {
         $order = new Order(490, 10, 0, 'WELCOME', new User(false));
 
@@ -36,7 +43,7 @@ class RegularUserDiscountRuleTest extends TestCase
         $this->assertEquals(50, $this->discountRule->calculate($order));
     }
 
-    public function testItIsCalculatingDiscountUnder500AndUsingFreeShipCoupon(): void
+    public function testCalculatesDiscountUnder500WithFreeShipCoupon(): void
     {
         $order = new Order(490, 10, 0, 'FREESHIP', new User(false));
 
@@ -44,24 +51,24 @@ class RegularUserDiscountRuleTest extends TestCase
         $this->assertEquals(10, $this->discountRule->calculate($order));
     }
 
-    public function testItIsNotSupportingPremiumUser(): void
+    public function testCalculatesDiscountUnder500WithoutCoupon(): void
+    {
+        $order = new Order(490, 10, 0, null, new User(false));
+        $this->assertTrue($this->discountRule->supports($order));
+        $this->assertEquals(0, $this->discountRule->calculate($order));
+    }
+
+    public function testDoesNotSupportPremiumUser(): void
     {
         $order = new Order(500, 10, 0, null, new User(true));
 
         $this->assertFalse($this->discountRule->supports($order));
     }
 
-    public function testItIsNotSupportingGuestUser(): void
+    public function testDoesNotSupportGuestUser(): void
     {
         $order = new Order(500, 10, 0, null, null);
 
         $this->assertFalse($this->discountRule->supports($order));
-    }
-
-    public function testItReturnsNoDiscountUnder500WithoutCoupon(): void
-    {
-        $order = new Order(490, 10, 0, null, new User(false));
-        $this->assertTrue($this->discountRule->supports($order));
-        $this->assertEquals(0, $this->discountRule->calculate($order));
     }
 }
