@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace App\E02InvoiceGenerator\Solution;
 
+use App\E02InvoiceGenerator\Solution\Domain\Model\Product;
+use App\E02InvoiceGenerator\Solution\Domain\Model\ProductList;
+
 class InvoiceGenerator
 {
-    public function generate(array $products): string
+    public function generate(array $productsData): string
     {
-        $total       = 0;
+        $products = $this->buildProductListFromData($productsData);
+
         $invoiceText = "Invoice\n";
         $invoiceText .= "====================\n";
 
+        /** @var Product $p */
         foreach ($products as $p) {
-            $subtotal = $p['price'] * $p['quantity'];
-            $invoiceText .= $p['name'] . ' x ' . $p['quantity'] . ' = $' . number_format($subtotal, 2) . "\n";
-            $total += $subtotal;
+            $subtotal = $p->getSubtotal();
+            $invoiceText .= $p->getName() . ' x ' . $p->getQuantity() . ' = $' . number_format($subtotal, 2) . "\n";
         }
 
+        $total = $products->getSubtotal();
         $tax        = $total * 0.16;
         $finalTotal = $total + $tax;
 
@@ -29,5 +34,15 @@ class InvoiceGenerator
         file_put_contents('invoice.txt', $invoiceText);
 
         return $invoiceText;
+    }
+
+    private function buildProductListFromData(array $products): ProductList
+    {
+        $list = [];
+        foreach ($products as $productData) {
+            $list[] = Product::fromData($productData);
+        }
+
+        return new ProductList($list);
     }
 }
