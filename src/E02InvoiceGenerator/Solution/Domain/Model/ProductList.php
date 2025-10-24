@@ -26,9 +26,13 @@ class ProductList implements IteratorAggregate
         $this->list = $productList;
     }
 
-    public function getSubtotal(): float
+    public function getSubtotal(int $precision = 2): float
     {
-        return array_reduce($this->list, fn ($carry, Product $product) => $carry + $product->getSubtotal(), 0);
+        return array_reduce(
+            $this->list,
+            fn (float $carry, Product $product) => $carry + round($product->getSubtotal(), $precision),
+            0.0
+        );
     }
 
 

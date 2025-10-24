@@ -62,4 +62,30 @@ TXT;
 
         $this->assertSame($expectedOutput, $this->formatter->format($invoice));
     }
+
+    public function testFormatInvoiceWithDecimalValues(): void
+    {
+        $productList = new ProductList(
+            [
+                new Product('Apples', 3.45, 2.5),   // fractional quantity
+                new Product('Oranges', 2.99, 1.25), // fractional price and quantity
+            ]
+        );
+
+        $invoice = new Invoice($productList, 0.16);
+
+        $expectedOutput = <<<TXT
+Invoice
+====================
+Apples x 2.5 = \$8.63
+Oranges x 1.25 = \$3.74
+====================
+Subtotal: \$12.37
+Tax (16%): \$1.98
+Total: \$14.35
+
+TXT;
+
+        $this->assertSame($expectedOutput, $this->formatter->format($invoice));
+    }
 }

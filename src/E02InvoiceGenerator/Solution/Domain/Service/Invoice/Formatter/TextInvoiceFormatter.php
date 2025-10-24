@@ -6,6 +6,7 @@ namespace App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Formatter;
 
 use App\E02InvoiceGenerator\Solution\Domain\Model\Invoice;
 use App\E02InvoiceGenerator\Solution\Domain\Model\Product;
+use App\E02InvoiceGenerator\Solution\Util\Helper\NumericFormatter;
 
 class TextInvoiceFormatter implements InvoiceFormatter
 {
@@ -40,8 +41,8 @@ class TextInvoiceFormatter implements InvoiceFormatter
             $lines .= sprintf(
                 '%s x %s = $%s',
                 $product->getName(),
-                number_format($product->getQuantity(), 0),
-                number_format($product->getSubtotal(), 2)
+                NumericFormatter::formatQuantity($product->getQuantity()),
+                NumericFormatter::formatMoney($product->getSubtotal())
             ) . PHP_EOL;
         }
 
@@ -50,13 +51,13 @@ class TextInvoiceFormatter implements InvoiceFormatter
 
     public function getTotalSummary(Invoice $invoice): string
     {
-        $text = sprintf('Subtotal: $%s', number_format($invoice->getSubtotal(), 2)) . PHP_EOL;
+        $text = sprintf('Subtotal: $%s', NumericFormatter::formatMoney($invoice->getSubtotal())) . PHP_EOL;
         $text .= sprintf(
             'Tax (%d%%): $%s',
-            number_format($invoice->getTaxRate() * 100, 0),
-            number_format($invoice->getTaxes(), 2)
+            (int) ($invoice->getTaxRate() * 100),
+            NumericFormatter::formatMoney($invoice->getTaxes())
         ) . PHP_EOL;
-        $text .= sprintf('Total: $%s', number_format($invoice->getTotal(), 2)) . PHP_EOL;
+        $text .= sprintf('Total: $%s', NumericFormatter::formatMoney($invoice->getTotal())) . PHP_EOL;
 
         return $text;
     }
