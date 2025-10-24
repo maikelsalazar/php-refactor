@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\E01DiscountCalculator;
+namespace App\E01DiscountCalculator\Exercise;
 
 class DiscountCalculator
 {

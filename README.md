@@ -3,7 +3,7 @@
 A collection of **PHP refactoring exercises** showcasing clean code practices, incremental improvement, and test-driven development.
 
 Each exercise includes:
-- The **original implementation** (`src/E0X...`)
+- The **original implementation** (`src/E0X.../Exercise`)
 - A **refactored solution** (`src/E0X.../Solution`)
 - A **dedicated test suite** for both versions (`tests/E0X...`)
 

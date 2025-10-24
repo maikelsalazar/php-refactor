@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\E01DiscountCalculator;
+namespace Tests\E01DiscountCalculator\Exercise;
 
-use App\E01DiscountCalculator\DiscountCalculator;
+use App\E01DiscountCalculator\Exercise\DiscountCalculator;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
+use Tests\E01DiscountCalculator\DiscountCalculatorDataProvider;
 
 class DiscountCalculatorTest extends TestCase
 {
