@@ -4,34 +4,27 @@ declare(strict_types=1);
 
 namespace App\E02InvoiceGenerator\Solution;
 
+use App\E02InvoiceGenerator\Solution\Domain\Model\Invoice;
 use App\E02InvoiceGenerator\Solution\Domain\Model\Product;
 use App\E02InvoiceGenerator\Solution\Domain\Model\ProductList;
+use App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Formatter\InvoiceFormatter;
+use App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Storage\InvoiceStorage;
 
 class InvoiceGenerator
 {
+    public function __construct(private readonly InvoiceFormatter $formatter, private readonly InvoiceStorage $storage)
+    {
+
+    }
+
     public function generate(array $productsData): string
     {
         $products = $this->buildProductListFromData($productsData);
 
-        $invoiceText = "Invoice\n";
-        $invoiceText .= "====================\n";
+        $invoice = new Invoice($products, 0.16);
 
-        /** @var Product $p */
-        foreach ($products as $p) {
-            $subtotal = $p->getSubtotal();
-            $invoiceText .= $p->getName() . ' x ' . $p->getQuantity() . ' = $' . number_format($subtotal, 2) . "\n";
-        }
-
-        $total = $products->getSubtotal();
-        $tax        = $total * 0.16;
-        $finalTotal = $total + $tax;
-
-        $invoiceText .= "====================\n";
-        $invoiceText .= 'Subtotal: $' . number_format($total, 2) . "\n";
-        $invoiceText .= 'Tax (16%): $' . number_format($tax, 2) . "\n";
-        $invoiceText .= 'Total: $' . number_format($finalTotal, 2) . "\n";
-
-        file_put_contents('invoice.txt', $invoiceText);
+        $invoiceText = $this->formatter->format($invoice);
+        $this->storage->save('invoice.txt', $invoiceText);
 
         return $invoiceText;
     }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\E02InvoiceGenerator\Solution;
 
+use App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Formatter\TextInvoiceFormatter;
+use App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Storage\FileInvoiceStorage;
+use App\E02InvoiceGenerator\Solution\Domain\Service\Invoice\Storage\InvoiceStorage;
+use App\E02InvoiceGenerator\Solution\Util\Storage\FakeStorage;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\TestCase;
 use Tests\E02InvoiceGenerator\InvoiceGeneratorDataProvider;
@@ -13,18 +17,15 @@ class InvoiceGeneratorTest extends TestCase
     private const INVOICE_FILE = 'invoice.txt';
 
     private InvoiceGenerator $invoiceGenerator;
+    private InvoiceStorage $storage;
 
     protected function setUp(): void
     {
-        $this->invoiceGenerator = new InvoiceGenerator();
-    }
+        $formatter = new TextInvoiceFormatter();
 
-    protected function tearDown(): void
-    {
-        // Clean up file created by the generator
-        if (file_exists(self::INVOICE_FILE)) {
-            unlink(self::INVOICE_FILE);
-        }
+        $this->storage = new FileInvoiceStorage(new FakeStorage());
+
+        $this->invoiceGenerator = new InvoiceGenerator($formatter, $this->storage);
     }
 
     #[DataProviderExternal(InvoiceGeneratorDataProvider::class, 'generatesInvoiceTextWithCorrectTotals')]
@@ -36,12 +37,11 @@ class InvoiceGeneratorTest extends TestCase
     }
 
     #[DataProviderExternal(InvoiceGeneratorDataProvider::class, 'createsInvoiceFile')]
-    public function testCreatesInvoiceFile(array $products, array $expectedStringsContained): void
+    public function testStoresInvoiceContent(array $products, array $expectedStringsContained): void
     {
         $this->invoiceGenerator->generate($products);
 
-        $this->assertFileExists(self::INVOICE_FILE);
-        $content = file_get_contents(self::INVOICE_FILE);
+        $content = $this->storage->getContent(self::INVOICE_FILE);
 
         foreach ($expectedStringsContained as $expectedStringContained) {
             $this->assertStringContainsString($expectedStringContained, $content);
