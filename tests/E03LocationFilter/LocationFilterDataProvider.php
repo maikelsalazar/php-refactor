@@ -48,4 +48,45 @@ class LocationFilterDataProvider
             ],
         ];
     }
+
+    public static function filterProviderSolution(): array
+    {
+        return [
+            'filter country MX' => [
+                'locations'    => self::LOCATIONS,
+                'filterString' => 'country:MX',
+                'expected'     => [
+                    ['country' => 'MX', 'city' => 'CDMX'],
+                    ['country' => 'MX', 'city' => 'Monterrey'],
+                ],
+            ],
+            'filter city CDMX' => [
+                'locations'    => self::LOCATIONS,
+                'filterString' => 'city:CDMX',
+                'expected'     => [
+                    ['country' => 'MX', 'city' => 'CDMX'],
+                ],
+            ],
+            'filter country US' => [
+                'locations'    => self::LOCATIONS,
+                'filterString' => 'country:US',
+                'expected'     => [
+                    ['country' => 'US', 'city' => 'New York'],
+                    ['country' => 'US', 'city' => 'Los Angeles'],
+                ], // solution version support this
+            ],
+            'filter city Monterrey' => [
+                'locations'    => self::LOCATIONS,
+                'filterString' => 'city:Monterrey',
+                'expected'     => [
+                    ['country' => 'MX', 'city' => 'Monterrey'], // solution version support this
+                ],
+            ],
+            'filter unknown' => [
+                'locations'    => self::LOCATIONS,
+                'filterString' => 'country:BR',
+                'expected'     => [], // no match
+            ],
+        ];
+    }
 }
